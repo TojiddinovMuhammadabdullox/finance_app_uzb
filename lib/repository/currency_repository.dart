@@ -16,4 +16,12 @@ class CurrencyRepository {
       throw Exception("Failed to load currencies");
     }
   }
+
+  Future<List<Currency>> searchCurrencies(String query) async {
+    final currencies = await fetchCurrencies();
+    return currencies
+        .where((currency) =>
+            currency.code.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+  }
 }

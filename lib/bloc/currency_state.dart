@@ -6,6 +6,8 @@ abstract class CurrencyState extends Equatable {
 
   @override
   List<Object> get props => [];
+
+  get currencies => null;
 }
 
 class CurrencyInitial extends CurrencyState {}
@@ -19,6 +21,25 @@ class CurrencyLoaded extends CurrencyState {
 
   @override
   List<Object> get props => [currencies];
+}
+
+class CurrencySearchLoaded extends CurrencyState {
+  final List<Currency> currencies;
+
+  const CurrencySearchLoaded(this.currencies);
+
+  @override
+  List<Object> get props => [currencies];
+}
+
+class CurrencySelected extends CurrencyState {
+  final Currency selectedCurrency;
+  final List<Currency> currencies;
+
+  const CurrencySelected(this.selectedCurrency, this.currencies);
+
+  @override
+  List<Object> get props => [selectedCurrency, currencies];
 }
 
 class CurrencyError extends CurrencyState {

@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state is CurrencyLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is CurrencyLoaded) {
+          } else if (state is CurrencyLoaded || state is CurrencySearchLoaded) {
             return CurrencyConverter(currencies: state.currencies);
           } else if (state is CurrencyError) {
             return Center(child: Text(state.message));
@@ -51,6 +51,49 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
   String? _selectedCurrency;
   double _inputAmount = 1.0;
   double? _convertedAmount;
+  final TextEditingController _searchController = TextEditingController();
+  List<Currency> _filteredCurrencies = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredCurrencies = widget.currencies;
+  }
+
+  void _convertCurrency() {
+    if (_selectedCurrency == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Valyutani tanlang")),
+      );
+      return;
+    }
+
+    final selectedCurrencyRate = widget.currencies
+        .firstWhere((currency) => currency.code == _selectedCurrency)
+        .rate;
+
+    setState(() {
+      _convertedAmount = _inputAmount * selectedCurrencyRate;
+    });
+  }
+
+  String _formatConvertedAmount(double amount) {
+    String amountStr = amount.toStringAsFixed(4);
+    return amountStr;
+  }
+
+  void _filterCurrencies(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        _filteredCurrencies = widget.currencies;
+      } else {
+        _filteredCurrencies = widget.currencies
+            .where((currency) =>
+                currency.code.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +101,39 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
+          TextField(
+            controller: _searchController,
+            decoration: const InputDecoration(
+              labelText: "Valyutani izlash",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12),
+                ),
+              ),
+            ),
+            onChanged: _filterCurrencies,
+          ),
+          if (_filteredCurrencies.isNotEmpty)
+            Container(
+              height: 150,
+              child: ListView.builder(
+                itemCount: _filteredCurrencies.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(_filteredCurrencies[index].code),
+                    onTap: () {
+                      setState(() {
+                        _selectedCurrency = _filteredCurrencies[index].code;
+                      });
+                      _searchController.clear();
+                      _filteredCurrencies = [];
+                      _convertCurrency();
+                    },
+                  );
+                },
+              ),
+            ),
+          const SizedBox(height: 20),
           Row(
             children: [
               Expanded(
@@ -130,27 +206,5 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
         ],
       ),
     );
-  }
-
-  void _convertCurrency() {
-    if (_selectedCurrency == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Valyutani tanlang")),
-      );
-      return;
-    }
-
-    final selectedCurrencyRate = widget.currencies
-        .firstWhere((currency) => currency.code == _selectedCurrency)
-        .rate;
-
-    setState(() {
-      _convertedAmount = _inputAmount * selectedCurrencyRate;
-    });
-  }
-
-  String _formatConvertedAmount(double amount) {
-    String amountStr = amount.toStringAsFixed(4);
-    return amountStr;
   }
 }
