@@ -3,8 +3,13 @@ import 'package:finance_app/repository/currency_repository.dart';
 import 'package:finance_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 
-void main() {
+void main() async {
+  final response =
+      await http.get(Uri.parse('https://cbu.uz/uz/arkhiv-kursov-valyut/json/'));
+  print('Status code: ${response.statusCode}');
+  print('Response body: ${response.body}');
   Bloc.observer = MyBlocObserver();
   runApp(MyApp());
 }
