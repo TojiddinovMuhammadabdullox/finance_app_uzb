@@ -114,7 +114,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
             onChanged: _filterCurrencies,
           ),
           if (_filteredCurrencies.isNotEmpty)
-            Container(
+            SizedBox(
               height: 150,
               child: ListView.builder(
                 itemCount: _filteredCurrencies.length,
