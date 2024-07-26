@@ -4,9 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/currency_bloc.dart';
 import '../bloc/currency_event.dart';
 import '../bloc/currency_state.dart';
-import '../models/currency.dart';
 
-// Define a custom color scheme
 class BusinessColors {
   static const Color primaryBlue = Color(0xFF0A2342);
   static const Color secondaryBlue = Color(0xFF2D4B73);

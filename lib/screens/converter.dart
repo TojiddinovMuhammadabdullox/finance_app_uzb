@@ -106,8 +106,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                         color: BusinessColors.secondaryBlue),
                   ),
                   keyboardType: TextInputType.number,
-                  style: const TextStyle(
-                      color: Colors.black), // Set the text color to black
+                  style: const TextStyle(color: Colors.black),
                   onChanged: (value) {
                     setState(() {
                       _inputAmount = double.tryParse(value) ?? 1.0;
@@ -134,8 +133,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                     prefixIcon: const Icon(Icons.search,
                         color: BusinessColors.secondaryBlue),
                   ),
-                  style: const TextStyle(
-                      color: Colors.black), // Set the text color to black
+                  style: const TextStyle(color: Colors.black),
                   onChanged: _filterCurrencies,
                 ),
                 if (_filteredCurrencies.isNotEmpty)
